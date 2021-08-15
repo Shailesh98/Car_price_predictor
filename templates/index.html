@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <link href="../static/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="container-1">
+        <div id="container-2">
+
+            <form action="{{ url_for('predict')}}" name="myForm" method="post" required>
+                <h2 id="main-title">Car Price Predictor.</h2>
+                <h3 id="label-1">Year</h3>
+                <input id="first" name="Year" type="number" required="required">
+                <h3 id="label-1">What is the Showroom Price?(In lakhs)</h3>
+                <input id="second" name="Present_Price" required="required">
+
+                <h3 id="label-1">How Many Kilometers Drived?</h3>
+                <input id="third" name="Kms_Driven" required="required">
+
+                <h3 id="label-1">How much owners previously had the car(0 or 1 or 3) ?</h3>
+                <input id="fourth" name="Owner" required="required">
+        </div>
+
+        <div id="container-3">
+            <div id=card>
+                <h3>Fuel type?</h3><br>
+                <select name="Fuel_Type_Petrol" id="fuel" required="required">
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Diesel">CNG</option>
+                    </select>
+            </div>
+
+            <div id=card>
+                <h3>Dealer or Individual?</h3><br>
+                <select name="Seller_Type_Individual" id="resea" required="required">
+                    <option value="Dealer">Dealer</option>
+                    <option value="Individual">Individual</option>
+                    </select>
+            </div>
+
+            <div id=card>
+                <h3>Transmission type</h3><br>
+                <select name="Transmission_Mannual" id="research" required="required">
+                    <option value="Mannual">Manual Car</option>
+                    <option value="Automatic">Automatic Car</option>
+                    </select>
+            </div>
+        </div>
+        <br><br><button id="sub" type="submit" onclick="send_data()">Calculate the Selling Price</button>
+        <br>
+        <br>
+        </form>
+
+        <br>
+        <h3 id="prediction"></h3>
+    </div>
+
+</body>
+
+<script>
+    var label = document.getElementById("prediction");
+    var btn = document.getElementById("sub");
+    var inp = document.getElementsByTagName('input');
+
+    var year_val = inp.item('year').value;
+    var price_val = inp.item('Present_Price').value
+    var kms_val = inp.item('Kms_Driven').value
+    var own = inp.item('Owner').value
+
+
+
+
+    function form_handler(event) {
+        event.preventDefault(); // Don't submit the form normally
+    }
+
+
+
+    function send_data() {
+
+        document.querySelector('form').addEventListener("submit", form_handler);
+
+        var fd = new FormData(document.querySelector('form'));
+
+        var xhr = new XMLHttpRequest({
+            mozSystem: true
+        });
+
+        xhr.open('POST', '/predict', true);
+        label.innerHTML = "Wait! Predicting Price.....";
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                label.innerHTML = "You can sell car at: ₹" + xhr.responseText;
+
+            }
+        };
+
+        xhr.onload = function() {};
+
+        xhr.send(fd);
+
+
+    }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+</html>
